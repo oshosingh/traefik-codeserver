@@ -12,10 +12,12 @@ services:
       PASSWORD: coder
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.codeserver2.rule=HOST(`second.allinonenow.info`)"
+      - "traefik.http.routers.codeserver2.rule=Path(`/second`)"
       - "traefik.http.routers.codeserver2.entrypoints=web"
+      - "traefik.http.routers.codeserver2.middlewares=strippath1"
       - "traefik.http.routers.codeserver2.service=codeserverservice2"
       - "traefik.http.services.codeserverservice2.loadbalancer.server.port=8080"
+      - "traefik.http.middlewares.strippath1.stripprefix.prefixes=/first"
 
       # TLS
       # - traefik.http.routers.codeserver.tls=true
