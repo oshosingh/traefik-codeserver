@@ -7,17 +7,17 @@ services:
     image: codercom/code-server:latest
     volumes:
       - ./config/first:/home/coder
-      - /var/run/docker.sock:/var/run/docker.sock
+      # - /var/run/docker.sock:/var/run/docker.sock
     environment:
       PASSWORD: coder
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.codeserver.rule=HOST(`/first`)"
+      - "traefik.http.routers.codeserver.rule=HOST(`code.localhost`)"
       - "traefik.http.routers.codeserver.entrypoints=web"
       - "traefik.http.routers.codeserver.service=codeserverservice"
-      - "traefik.http.routers.codeserver.middlewares=pathstrip"
+      #- "traefik.http.routers.codeserver.middlewares=pathstrip"
       - "traefik.http.services.codeserverservice.loadbalancer.server.port=8080"
-      - "traefik.http.middlewares.pathstrip.stripprefix.prefixes=/first"
+      #- "traefik.http.middlewares.pathstrip.stripprefix.prefixes=/first"
 
       # TLS
       # - traefik.http.routers.codeserver.tls=true
