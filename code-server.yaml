@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  codeserver:
+    container_name: codeserver
+    restart: unless-stopped
+    image: codercom/code-server:latest
+    volumes:
+      - ./config/first:/home/coder
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      PASSWORD: coder
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.codeserver.rule=HOST(`first.allinonenow.info`)"
+      - "traefik.http.routers.codeserver.entrypoints=web"
+      - "traefik.http.routers.codeserver.service=codeserverservice"
+      - "traefik.http.services.codeserverservice.loadbalancer.server.port=8080"
+
+      # TLS
+      # - traefik.http.routers.codeserver.tls=true
+      # - traefik.http.routers.codeserver.tls.certresolver=codeserverresolver

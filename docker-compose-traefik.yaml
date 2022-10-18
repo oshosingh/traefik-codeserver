@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  traefik:
+    container_name: traefik
+    image: traefik
+
+    environment:
+      TRAEFIK_API_INSECURE: "true"
+      TRAEFIK_PROVIDERS_DOCKER: "true"
+      TRAEFIK_LOG_LEVEL: "INFO"
+      TRAEFIK_PROVIDERS_DOCKER_EXPOSEDBYDEFAULT: "false"
+      TRAEFIK_ENTRYPOINTS_web: "true"
+      TRAEFIK_ENTRYPOINTS_websecure: "true"
+      TRAEFIK_ENTRYPOINTS_web_ADDRESS: ":80"
+      TRAEFIK_ENTRYPOINTS_websecure_ADDRESS: ":443"
+
+      # TLS CONFIG
+      # TRAEFIK_CERTIFICATESRESOLVERS_codeserverresolver_ACME_EMAIL: osho.cour@gmail.com
+      # TRAEFIK_CERTIFICATESRESOLVERS_codeserverresolver_ACME_STORAGE: acme.json
+      # TRAEFIK_CERTIFICATESRESOLVERS_codeserverresolver_ACME_HTTPCHALLENGE_ENTRYPOINT: web
+
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "443:443"
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

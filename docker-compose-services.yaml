@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+
+  nginx:
+    container_name: nginx
+    image: nginx
+    labels:
+      - "traefik.enable=true"
+
+      # Router Labels
+      - "traefik.http.routers.nginx.rule=Host(`my.localhost`) && Path(`/nginx`)"
+      - "traefik.http.routers.nginx.service=nginxservice"
+      - "traefik.http.routers.nginx.middlewares=nginxcompress, nginxpathprefixremover"
+
+      # Service Labels
+      - "traefik.http.services.nginxservice.loadbalancer.server.port=80"
+
+      # Middleware Labels
+      - "traefik.http.middlewares.nginxcompress.compress=true"
+      - "traefik.http.middlewares.nginxpathprefixremover.stripprefix.prefixes=/nginx"
+  
+  whoami:
+    image: containous/whoami
+    labels:
+      - "traefik.enable=true"
+
+      # Router Labels
+      - "traefik.http.routers.whoami.rule=Host(`my.localhost`) && Path(`/whoami`)"
+      - "traefik.http.routers.whoami.middlewares=whoamipathremover"
+
+      # Middleware Labels
+      - "traefik.http.middlewares.whoamipathremover.stripprefix.prefixes=/whoami"
+  
+  catsapp:
+    image: mikesir87/cats:1.0
+    labels:
+      - "traefik.enable=true"
+
+      # Router Labels
+      - "traefik.http.routers.catsapp.rule=Host(`my.localhost`) && Path(`/cat`)"
+      - "traefik.http.routers.catsapp.service=catsapp"
+      - "traefik.http.routers.catsapp.middlewares=prefixremover, catsappcompress"
+
+      # Service Labels
+      - "traefik.http.services.catsapp.loadbalancer.server.port=5000"
+      
+      # Middleware Labels
+      - "traefik.http.middlewares.prefixremover.stripprefix.prefixes=/cat"
+      - "traefik.http.middlewares.catsappcompress.compress=true"
